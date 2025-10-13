@@ -18,6 +18,7 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/img/arklib.png">
 </head>
 <body>
 
