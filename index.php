@@ -15,7 +15,7 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ArkLib</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="main.css">
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/img/arklib.png">
