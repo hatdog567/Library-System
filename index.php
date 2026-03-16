@@ -15,7 +15,7 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ArkLib</title>
-  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="main.css?v=2">
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/img/arklib.png">
@@ -68,9 +68,12 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
           <input type="email" name="email" placeholder="Email" required>
         </div>
         <div class="input-box">
-          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" id="loginPw" name="password" placeholder="Password" required>
         </div>
         <button class="btn" type="submit" name="login">Login</button>
+        <div class="forgot-row">
+          <button type="button" class="forgot-link" id="openForgot">Forgot password?</button>
+        </div>
       </form>
 
       <!-- SIGN UP -->
@@ -89,11 +92,32 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
           <input type="email" name="email" placeholder="Email" required>
         </div>
         <div class="input-box">
-          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" id="signupPw" name="password" placeholder="Password" required>
         </div>
         <button class="btn" type="submit" name="register">Sign Up</button>
       </form>
     </div>
+
+    <!-- ── Forgot Password Panel (hidden inside modal) ── -->
+    <div class="forgot-panel" id="forgotPanel" style="display:none">
+      <button type="button" class="forgot-back" id="closeForgot">&#8592; Back to Login</button>
+      <h2>Reset Password</h2>
+      <p class="forgot-sub">Enter your account email and we'll update your password right away.</p>
+      <div id="forgotMsg"></div>
+      <form id="forgotForm" class="forgot-form" novalidate>
+        <div class="input-box">
+          <input type="email" id="forgotEmail" name="email" placeholder="Your email address" required>
+        </div>
+        <div class="input-box">
+          <input type="password" id="newPw" name="new_password" placeholder="New password" required>
+        </div>
+        <div class="input-box">
+          <input type="password" id="confirmPw" name="confirm_password" placeholder="Confirm new password" required>
+        </div>
+        <button class="btn" type="submit" id="forgotSubmitBtn">Reset Password</button>
+      </form>
+    </div>
+
   </div>
 
   <!-- Main content -->
@@ -110,7 +134,7 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
               From innocence under reckoning in <em>Mockingbird</em> to the uneasy return of Maycomb in
               <em>Watchman</em>—Lee wrote not just of justice, but of the journey to see it clearly.
             </p>
-            <a class="cta" href="#read">Read Now</a>
+            <a class="cta" href="https://www.goodreads.com/author/show/1825.Harper_Lee" target="_blank" rel="noopener">Read Now</a>
           </div>
         </article>
 
@@ -152,6 +176,57 @@ $openModal = ($errors['login'] || $errors['register'] || $success); // auto-open
     <?php if ($openModal): ?>
       document.addEventListener('DOMContentLoaded', function(){ showTab('<?= $activeTab === 'register' ? 'signup' : 'login' ?>'); });
     <?php endif; ?>
+
+
+    // ── Forgot password panel ────────────────────────────────────────────
+    const forgotPanel = document.getElementById('forgotPanel');
+    const formWrapper = document.querySelector('.form-wrapper');
+    const authTabs    = document.querySelector('.auth-tabs');
+
+    document.getElementById('openForgot').addEventListener('click', () => {
+      formWrapper.style.display = 'none';
+      authTabs.style.display    = 'none';
+      forgotPanel.style.display = 'block';
+    });
+    document.getElementById('closeForgot').addEventListener('click', () => {
+      forgotPanel.style.display = 'none';
+      formWrapper.style.display = '';
+      authTabs.style.display    = '';
+    });
+
+    // AJAX reset
+    document.getElementById('forgotForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const msgEl  = document.getElementById('forgotMsg');
+      const btn    = document.getElementById('forgotSubmitBtn');
+      const email  = document.getElementById('forgotEmail').value.trim();
+      const newPw  = document.getElementById('newPw').value;
+      const confPw = document.getElementById('confirmPw').value;
+      msgEl.className = 'forgot-msg';
+      msgEl.textContent = '';
+
+      if (!email) { showForgotMsg('Please enter your email.', false); return; }
+      if (newPw.length < 6) { showForgotMsg('Password must be at least 6 characters.', false); return; }
+      if (newPw !== confPw) { showForgotMsg('Passwords do not match.', false); return; }
+
+      btn.disabled = true; btn.textContent = 'Resetting…';
+      try {
+        const fd = new FormData();
+        fd.append('email', email);
+        fd.append('new_password', newPw);
+        const res  = await fetch('forgot_password.php', { method: 'POST', body: fd });
+        const data = await res.json();
+        showForgotMsg(data.message, data.success);
+        if (data.success) { this.reset(); }
+      } catch { showForgotMsg('Network error. Please try again.', false); }
+      finally { btn.disabled = false; btn.textContent = 'Reset Password'; }
+    });
+
+    function showForgotMsg(msg, ok) {
+      const el = document.getElementById('forgotMsg');
+      el.textContent = msg;
+      el.className   = 'forgot-msg ' + (ok ? 'forgot-msg--ok' : 'forgot-msg--err');
+    }
   </script>
   <?php
   

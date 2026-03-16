@@ -1,0 +1,643 @@
+/* ═══════════════════════════════════════════════════════════════════
+   main_site.css  —  authenticated dashboard
+   Inherits :root tokens + base rules from main.css
+   Palette: #251818 dark / #efe8e0 paper / #7f9aa2 accent / #340a10 red
+   Typography: Anton (headings) · Montserrat (UI) · Georgia (body text)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Body flex (sticky footer) ───────────────────────────────────── */
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Nav buttons (in the shared .container header) ───────────────── */
+.ms-btn {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  padding: 10px 22px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #1f1f1f;
+  color: #fff;
+  transition: background 0.18s, transform 0.14s;
+}
+
+.ms-btn:hover {
+  background: #340a10;
+  transform: translateY(-1px);
+}
+
+.ms-btn--ghost {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.ms-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ── Main wrapper ────────────────────────────────────────────────── */
+.ms-main {
+  flex: 1 0 auto;
+  padding-top: 110px;
+  padding-bottom: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* sections manage their own spacing */
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WELCOME BANNER
+   ═══════════════════════════════════════════════════════════════════ */
+.ms-welcome {
+  background: #251818;
+  /* same background-image trick as the header — layered tint over library photo */
+  background-image: linear-gradient(to right,
+      rgba(37, 24, 24, 0.97) 0%,
+      rgba(37, 24, 24, 0.88) 55%,
+      rgba(52, 10, 16, 0.75) 100%), url('img/image.png');
+  background-size: cover;
+  background-position: center;
+  padding: 48px clamp(20px, 5vw, 80px);
+  margin-bottom: 40px;
+}
+
+.ms-welcome__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+/* Left column: avatar + text */
+.ms-welcome__left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* Circular avatar with user initial */
+.ms-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #7f9aa2;
+  border: 3px solid rgba(239, 232, 224, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 2rem;
+  color: #fff;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.ms-welcome__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ms-welcome__sup {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(239, 232, 224, 0.55);
+  margin: 0;
+}
+
+.ms-welcome__name {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(32px, 5vw, 54px);
+  color: #efe8e0;
+  line-height: 1;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.ms-welcome__sub {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-style: italic;
+  color: rgba(239, 232, 224, 0.6);
+  margin: 0;
+  max-width: 44ch;
+}
+
+/* Right column: stats */
+.ms-welcome__stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 28px;
+}
+
+.ms-wstat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 28px;
+}
+
+.ms-wstat__num {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  color: #efe8e0;
+  line-height: 1;
+}
+
+.ms-wstat__lbl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(239, 232, 224, 0.5);
+  text-align: center;
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.ms-wstat__sep {
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FEATURED BOOK SECTION
+   (re-uses .frame, .grid, .feature, .aside, .author, .blurb, .cta,
+    .covers, .cover, .photo from main.css — nothing overridden here)
+   ═══════════════════════════════════════════════════════════════════ */
+.ms-featured-frame {
+  max-width: 1180px;
+  margin: 0 auto 40px;
+  width: 100%;
+}
+
+/* Editor's Pick badge */
+.ms-badge {
+  display: inline-block;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: #340a10;
+  color: #fff;
+  padding: 3px 12px;
+  margin-bottom: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOOK COLLECTION
+   ═══════════════════════════════════════════════════════════════════ */
+.ms-collection {
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 clamp(16px, 3vw, 34px) 48px;
+}
+
+.ms-collection__hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.ms-collection__title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(22px, 3vw, 32px);
+  color: #251818;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+/* Search */
+.ms-search {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  padding: 9px 16px;
+  border: 2px solid #c8bfb6;
+  border-radius: 3px;
+  background: #fff;
+  color: #111;
+  width: clamp(180px, 22vw, 260px);
+  transition: border-color 0.2s;
+}
+
+.ms-search:focus {
+  outline: none;
+  border-color: #7f9aa2;
+}
+
+/* Grid */
+.ms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.ms-empty {
+  grid-column: 1 / -1;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  color: #888;
+  text-align: center;
+  padding: 48px 0;
+}
+
+/* ── Book card (rectangular, warm-flat aesthetic) ────────────────── */
+.ms-card {
+  background: #fff;
+  border: 1px solid #ddd7cf;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+
+.ms-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Colored spine strip */
+.ms-card__spine {
+  height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ms-card__initials {
+  font-family: 'Anton', sans-serif;
+  font-size: 2.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* Body */
+.ms-card__body {
+  padding: 14px 16px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ms-card__genre {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #efe8e0;
+  color: #251818;
+  padding: 2px 8px;
+  margin-bottom: 4px;
+  align-self: flex-start;
+}
+
+.ms-card__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  color: #111;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.ms-card__author {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  color: #777;
+  margin: 0;
+}
+
+.ms-card__desc {
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 5px 0 0;
+}
+
+/* Footer */
+.ms-card__foot {
+  padding: 0 16px 14px;
+}
+
+.ms-card__read {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  background: #251818;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  display: inline-block;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+  transition: background 0.18s, box-shadow 0.15s, transform 0.13s;
+}
+
+.ms-card__read:hover {
+  background: #640a17;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.ms-card__nopdf {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+/* ── Page flash ──────────────────────────────────────────────────── */
+.ms-page-flash {
+  max-width: 1180px;
+  margin: 0 auto 24px;
+  width: 100%;
+  padding: 14px 24px;
+  background: #0f3b1c;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  border-left: 4px solid #2ecc71;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   OVERLAY + MODALS
+   ═══════════════════════════════════════════════════════════════════ */
+.ms-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+.ms-overlay.is-open {
+  display: block;
+}
+
+.ms-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: min(480px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #1a1a1a;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  color: #fff;
+  padding: 32px 28px 28px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.6);
+}
+
+.ms-modal.is-open {
+  display: block;
+}
+
+.ms-modal__x {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.ms-modal__x:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ms-modal__title {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.65rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+}
+
+.ms-modal__body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 22px;
+  line-height: 1.55;
+}
+
+.ms-modal__row {
+  display: flex;
+  gap: 12px;
+}
+
+.ms-modal__stay {
+  flex: 1;
+  padding: 12px;
+  background: #2e2e2e;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.ms-modal__stay:hover {
+  background: #3a3a3a;
+}
+
+.ms-modal__go {
+  flex: 1;
+  padding: 12px;
+  background: #640a17;
+  color: #fff;
+  border-radius: 3px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  transition: background 0.18s;
+}
+
+.ms-modal__go:hover {
+  background: #8a0e1f;
+}
+
+/* Form */
+.ms-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ms-field label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ms-field label span {
+  color: #e5697a;
+}
+
+.ms-field input,
+.ms-field select,
+.ms-field textarea {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 3px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.ms-field input:focus,
+.ms-field select:focus,
+.ms-field textarea:focus {
+  outline: none;
+  border-color: #7f9aa2;
+}
+
+.ms-field input::placeholder,
+.ms-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.ms-field select option {
+  background: #1a1a1a;
+}
+
+.ms-submit-btn {
+  padding: 13px;
+  border: none;
+  border-radius: 3px;
+  background: #340a10;
+  color: #fff;
+  font-family: 'Anton', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: background 0.18s, transform 0.13s;
+}
+
+.ms-submit-btn:hover:not(:disabled) {
+  background: #640a17;
+  transform: translateY(-1px);
+}
+
+.ms-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ms-flash {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.86rem;
+  padding: 10px 14px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.ms-flash--ok {
+  background: #0f3b1c;
+  color: #6ef79e;
+  border-left: 3px solid #2ecc71;
+}
+
+.ms-flash--err {
+  background: #3b0f12;
+  color: #f79ea9;
+  border-left: 3px solid #e74c3c;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .ms-welcome__stats {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ms-wstat {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ms-welcome {
+    padding: 36px 20px;
+  }
+
+  .ms-welcome__left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ms-welcome__stats {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .ms-wstat__sep {
+    display: none;
+  }
+
+  .ms-collection__hdr {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ms-search {
+    width: 100%;
+  }
+}
