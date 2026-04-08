@@ -1,90 +1,147 @@
-📚 ArkLib
+# ArkLib
 
-ArkLib is a Digital Library and Book Management System (SaaS) that allows users to upload, manage, and browse books in a centralized online platform.
+ArkLib is a Digital Library and Book Management System that allows users to upload, manage, and browse books in a centralized online platform.
 
 The system enables users to create accounts, submit books, edit book details, and explore a growing collection of digital resources.
 
+## System Architecture
 
-🏗️ System Architecture
+ArkLib is built as a **Next.js** full-stack web application (converted from PHP).
 
-ArkLib follows a Full-Stack Web Application structure composed of three layers:
+### Frontend
+- **Framework:** Next.js 15 (React)
+- **Styling:** Tailwind CSS + Custom CSS
+- **Features:** User interface, forms, modals, book display and search
 
-Frontend
-Built using:
-HTML
-CSS
-JavaScript
+### Backend
+- **Framework:** Next.js API Routes
+- **Authentication:** JWT-based sessions with HTTP-only cookies
+- **Data Storage:** In-memory storage (demo mode) or database integration
 
-Responsible for:
-User interface
-Forms and modals
-Book display and search features
+### Database Support
+- Neon PostgreSQL (optional integration)
+- In-memory storage for demo/development
 
-Backend
-Built using:
-PHP
+## Project Structure
 
-Handles:
-User authentication
-Form processing
-Business logic
-Communication with the database
-
-
-Database
-Built using:
-MySQL
-
-Stores:
-User accounts
-Book information
-Uploaded book covers
-
-ArkLib
+```
+arklib/
+├── app/                          # Next.js App Router
+│   ├── api/                      # API Routes
+│   │   ├── auth/
+│   │   │   ├── login/route.js
+│   │   │   ├── register/route.js
+│   │   │   ├── logout/route.js
+│   │   │   ├── session/route.js
+│   │   │   └── forgot-password/route.js
+│   │   └── books/
+│   │       ├── route.js
+│   │       └── [id]/route.js
+│   ├── dashboard/
+│   │   └── page.js               # Main dashboard (protected)
+│   ├── globals.css               # Global styles
+│   ├── layout.js                 # Root layout
+│   └── page.js                   # Landing page
 │
-├── index.php              # Landing page (Login / Signup)
-├── main_site.php          # Main dashboard
+├── components/                   # React Components
+│   ├── auth-modal.js             # Login/Signup modal
+│   └── book-modal.js             # Add/Edit book modal
 │
-├── database.php           # Database connection
-├── login-auth.php         # Authentication handler
-├── forgot_password.php    # Password recovery
-├── submit_book.php        # Book submission handler
-├── update_book.php        # Book editing handler
-├── logout.php             # Logout system
+├── lib/                          # Utilities
+│   ├── auth.js                   # Authentication helpers (JWT)
+│   └── db.js                     # Database/storage layer
 │
-├── script.js              # Frontend interactivity
-├── style.css              # Global styling
-├── main.css
-├── main_site.css
+├── public/                       # Static assets
+│   ├── img/                      # Images
+│   └── uploads/                  # User uploads
 │
-├── create_books_table.sql # Database setup
+├── scripts/                      # Database scripts
+│   └── setup-db.sql
 │
-├── img/                   # Static images
-└── uploads/               # User uploaded book covers
+├── documentation/                # Project documentation
+│   └── arklib_documentation.md
+│
+├── legacy/                       # Original PHP version (archived)
+│   ├── php/                      # PHP files
+│   ├── css/                      # Legacy stylesheets
+│   ├── js/                       # Legacy JavaScript
+│   └── sql/                      # SQL scripts
+│
+├── middleware.js                 # Route protection
+├── next.config.js
+├── package.json
+└── README.md
+```
 
+## Key Features
 
-⚙️ Key Features
+- User authentication (Login / Signup)
+- Password show/hide toggle
+- Book submission and management
+- Book cover uploads
+- Dashboard with book listings
+- Search functionality
+- Password recovery system
+- Responsive design (mobile & desktop)
 
-User authentication (Login / Signup)
-Book submission and management
-Book cover uploads
-Dashboard with book listings
-Search functionality
-Password recovery system
+## Getting Started
 
+### Prerequisites
+- Node.js 18+ installed
+- npm or pnpm package manager
 
-🔄 Example Workflow (Submitting a Book)
+### Installation
 
-User logs into the dashboard.
-User clicks Submit Book.
-A form appears using JavaScript modal.
-The form sends data to submit_book.php.
-The backend validates the data.
-The book details are stored in MySQL.
-The uploaded cover is saved in uploads/.
-The book appears on the dashboard.
+1. Clone or download the project
 
+2. Install dependencies:
+```bash
+npm install
+# or
+pnpm install
+```
 
-🚀 Version
+3. Run the development server:
+```bash
+npm run dev
+# or
+pnpm dev
+```
 
-ArkLib v1.0
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Demo Mode
+
+The app runs in demo mode with in-memory storage by default. Data will persist during the session but will reset when the server restarts.
+
+### Production Mode (with Database)
+
+To use persistent storage, connect a Neon PostgreSQL database:
+1. Create a Neon database at [neon.tech](https://neon.tech)
+2. Add the `DATABASE_URL` environment variable
+3. Run the setup script in `scripts/setup-db.sql`
+
+## Example Workflow (Submitting a Book)
+
+1. User logs into the dashboard
+2. User clicks "Add New Book"
+3. A form modal appears
+4. The form sends data to `/api/books`
+5. The backend validates and stores the data
+6. The book appears on the dashboard
+
+## Tech Stack
+
+- **Next.js 15** - React framework
+- **Tailwind CSS** - Styling
+- **bcryptjs** - Password hashing
+- **jose** - JWT handling
+- **SWR** - Data fetching (optional)
+
+## Version
+
+ArkLib v2.0 (Next.js Edition)
+
+---
+
+*Converted from PHP to Next.js for modern web deployment*

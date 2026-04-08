@@ -12,7 +12,6 @@ export async function middleware(request) {
   const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
   
   const sessionCookie = request.cookies.get('session')?.value
-  console.log('[v0] Middleware - path:', path, 'has session cookie:', !!sessionCookie)
 
   // Verify session
   let session = null
@@ -30,10 +29,8 @@ export async function middleware(request) {
 
   // Redirect to login if accessing protected route without session
   if (isProtectedRoute && !session) {
-    console.log('[v0] Middleware - redirecting to / (no valid session)')
     return NextResponse.redirect(new URL('/', request.url))
   }
-  console.log('[v0] Middleware - allowing access, session valid:', !!session)
 
   return NextResponse.next()
 }
