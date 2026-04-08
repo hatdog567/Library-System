@@ -1,0 +1,102 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Georgia', ui-serif, serif;
+  --font-display: 'Anton', ui-sans-serif, system-ui, sans-serif;
+  
+  --color-paper: #f5f0e6;
+  --color-paper-dark: #e8e0d0;
+  --color-wine: #722f37;
+  --color-wine-dark: #5a252c;
+  --color-wine-light: #8b3d47;
+  --color-gold: #c9a227;
+  --color-gold-dark: #a88620;
+  --color-ink: #2c2c2c;
+  --color-ink-light: #4a4a4a;
+  
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-wine);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-paper-dark);
+  --color-secondary-foreground: var(--color-ink);
+  --color-accent: var(--color-gold);
+  --color-accent-foreground: var(--color-ink);
+  --color-muted: var(--color-paper-dark);
+  --color-muted-foreground: var(--color-ink-light);
+  --color-card: #ffffff;
+  --color-card-foreground: var(--color-ink);
+  --color-border: #d4cfc4;
+  --color-input: #d4cfc4;
+  --color-ring: var(--color-wine);
+  
+  --radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-paper-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-wine);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-wine-dark);
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+/* Book card hover effect */
+.book-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Input focus styles */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-wine);
+}
+
+/* Button transitions */
+button {
+  transition: all 0.2s ease;
+}
+
+/* Animated gradient for hero */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
