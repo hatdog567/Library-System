@@ -246,6 +246,17 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                       minLength={6}
                     />
                   </div>
+                  <div className="input-box">
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="Confirm Password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      minLength={6}
+                    />
+                  </div>
                   <button className="auth-btn" type="submit" disabled={loading}>
                     {loading ? 'Signing up...' : 'Sign Up'}
                   </button>

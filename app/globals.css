@@ -404,8 +404,14 @@ main {
 
 .member-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: clamp(16px, 3vw, 34px);
+}
+
+@media (max-width: 1024px) {
+  .member-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .member {
@@ -1210,7 +1216,7 @@ main {
   }
   
   .member-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 16px;
   }
   
