@@ -51,7 +51,7 @@ export default function HomePage() {
           <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[50px] sm:h-[70px] md:h-[100px] w-auto" />
         </a>
         <nav className="flex gap-2 sm:gap-3">
-          <a href="#members" className="px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#1f1f1f] text-white rounded-[20px] font-bold no-underline hover:bg-[#340a10] transition-colors" style={{ fontFamily: 'Anton, sans-serif' }}>
+          <a href="#members" className="px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#1f1f1f] text-white rounded-[20px] no-underline hover:bg-[#340a10] transition-colors" style={{ fontFamily: 'Anton, sans-serif' }}>
             About
           </a>
           <button
