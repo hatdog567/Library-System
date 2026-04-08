@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import sql from '@/lib/db'
+import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { createSession } from '@/lib/auth'
 
@@ -16,18 +16,14 @@ export async function POST(request) {
     }
 
     // Find user
-    const users = await sql`
-      SELECT id, username, password FROM users WHERE email = ${email}
-    `
+    const user = db.findUserByEmail(email)
 
-    if (users.length === 0) {
+    if (!user) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
         { status: 401 }
       )
     }
-
-    const user = users[0]
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password)

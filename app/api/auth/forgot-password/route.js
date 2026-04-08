@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import sql from '@/lib/db'
+import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
 
 export async function POST(request) {
@@ -29,11 +29,9 @@ export async function POST(request) {
     }
 
     // Check if user exists
-    const users = await sql`
-      SELECT id FROM users WHERE email = ${email}
-    `
+    const user = db.findUserByEmail(email)
 
-    if (users.length === 0) {
+    if (!user) {
       return NextResponse.json(
         { error: 'No account found with this email' },
         { status: 404 }
@@ -42,10 +40,7 @@ export async function POST(request) {
 
     // Update password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
-
-    await sql`
-      UPDATE users SET password = ${hashedPassword} WHERE email = ${email}
-    `
+    db.updateUserPassword(email, hashedPassword)
 
     return NextResponse.json({
       success: true,

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import sql from '@/lib/db'
+import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { createSession } from '@/lib/auth'
 
@@ -30,11 +30,9 @@ export async function POST(request) {
     }
 
     // Check if user already exists
-    const existingUser = await sql`
-      SELECT id FROM users WHERE email = ${email} OR username = ${username}
-    `
+    const existingUser = db.findUserByEmailOrUsername(email, username)
 
-    if (existingUser.length > 0) {
+    if (existingUser) {
       return NextResponse.json(
         { error: 'Username or email already exists' },
         { status: 400 }
@@ -43,14 +41,7 @@ export async function POST(request) {
 
     // Hash password and create user
     const hashedPassword = await bcrypt.hash(password, 10)
-
-    const result = await sql`
-      INSERT INTO users (username, email, password)
-      VALUES (${username}, ${email}, ${hashedPassword})
-      RETURNING id, username
-    `
-
-    const user = result[0]
+    const user = db.createUser(username, email, hashedPassword)
 
     // Create session
     await createSession(user.id, user.username)

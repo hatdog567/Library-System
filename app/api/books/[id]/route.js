@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import sql from '@/lib/db'
+import db from '@/lib/db'
 import { getSession } from '@/lib/auth'
 
 export async function PUT(request, { params }) {
@@ -25,32 +25,27 @@ export async function PUT(request, { params }) {
     }
 
     // Verify ownership
-    const existing = await sql`
-      SELECT id FROM books WHERE id = ${id} AND user_id = ${session.userId}
-    `
+    const existing = db.getBookById(id, session.userId)
 
-    if (existing.length === 0) {
+    if (!existing) {
       return NextResponse.json(
         { error: 'Book not found or unauthorized' },
         { status: 404 }
       )
     }
 
-    const result = await sql`
-      UPDATE books 
-      SET book_name = ${book_name}, 
-          author = ${author}, 
-          genre = ${genre || null}, 
-          description = ${description || null}, 
-          cover_url = ${cover_url || null}
-      WHERE id = ${id} AND user_id = ${session.userId}
-      RETURNING *
-    `
+    const book = db.updateBook(id, session.userId, {
+      book_name,
+      author,
+      genre,
+      description,
+      cover_url
+    })
 
     return NextResponse.json({
       success: true,
       message: 'Book updated successfully',
-      book: result[0]
+      book
     })
 
   } catch (error) {
@@ -76,13 +71,9 @@ export async function DELETE(request, { params }) {
     const { id } = await params
 
     // Verify ownership and delete
-    const result = await sql`
-      DELETE FROM books 
-      WHERE id = ${id} AND user_id = ${session.userId}
-      RETURNING id
-    `
+    const deleted = db.deleteBook(id, session.userId)
 
-    if (result.length === 0) {
+    if (!deleted) {
       return NextResponse.json(
         { error: 'Book not found or unauthorized' },
         { status: 404 }
