@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
-import { createSession } from '@/lib/auth'
+import { encrypt } from '@/lib/auth'
 
 export async function POST(request) {
   try {
@@ -16,9 +16,7 @@ export async function POST(request) {
     }
 
     // Find user
-    console.log('[v0] Login attempt for email:', email)
     const user = db.findUserByEmail(email)
-    console.log('[v0] User found:', user ? 'yes' : 'no')
 
     if (!user) {
       return NextResponse.json(
@@ -37,14 +35,27 @@ export async function POST(request) {
       )
     }
 
-    // Create session
-    await createSession(user.id, user.username)
+    // Create session token
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    const sessionToken = await encrypt({ userId: user.id, username: user.username, expiresAt })
 
-    return NextResponse.json({
+    // Create response with cookie
+    const response = NextResponse.json({
       success: true,
       message: 'Login successful',
       user: { id: user.id, username: user.username }
     })
+
+    // Set the session cookie on the response
+    response.cookies.set('session', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: expiresAt,
+      sameSite: 'lax',
+      path: '/',
+    })
+
+    return response
 
   } catch (error) {
     console.error('Login error:', error)

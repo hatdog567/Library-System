@@ -103,9 +103,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
         }, 3000)
       } else {
         // Login successful - close modal and redirect to dashboard
-        console.log('[v0] Login successful, redirecting to dashboard...')
         onClose()
-        // Use window.location for reliable redirect
         window.location.href = '/dashboard'
       }
 
