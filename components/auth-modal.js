@@ -102,10 +102,11 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
           setMode('login')
         }, 3000)
       } else {
-        // Login successful - close modal and redirect
+        // Login successful - close modal and redirect to dashboard
+        console.log('[v0] Login successful, redirecting to dashboard...')
         onClose()
-        router.push('/dashboard')
-        router.refresh()
+        // Use window.location for reliable redirect
+        window.location.href = '/dashboard'
       }
 
     } catch (err) {
