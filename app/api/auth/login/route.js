@@ -16,7 +16,10 @@ export async function POST(request) {
     }
 
     // Find user
+    console.log('[v0] Login attempt for email:', email)
+    console.log('[v0] Current users in store:', globalThis.__dbStore?.users?.map(u => u.email))
     const user = db.findUserByEmail(email)
+    console.log('[v0] User found:', user ? 'yes' : 'no')
 
     if (!user) {
       return NextResponse.json(

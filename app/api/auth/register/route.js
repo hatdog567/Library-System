@@ -42,6 +42,7 @@ export async function POST(request) {
     // Hash password and create user
     const hashedPassword = await bcrypt.hash(password, 10)
     const user = db.createUser(username, email, hashedPassword)
+    console.log('[v0] User created:', user.email, 'Total users:', globalThis.__dbStore?.users?.length)
 
     // Create session
     await createSession(user.id, user.username)
