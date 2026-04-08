@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Library, Search, Star, Users, Shield, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 import AuthModal from '@/components/auth-modal'
 
 export default function HomePage() {
@@ -12,7 +12,6 @@ export default function HomePage() {
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/auth/session')
@@ -36,173 +35,136 @@ export default function HomePage() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper">
+      <div className="min-h-screen flex items-center justify-center bg-[#efe8e0]">
         <div className="animate-pulse">
-          <BookOpen className="w-16 h-16 text-wine" />
+          <Image src="/img/arklib.png" alt="ArkLib" width={100} height={100} />
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen flex flex-col bg-[#efe8e0]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-8 h-8 text-wine" />
-              <span className="text-xl font-bold text-foreground">Library System</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => openAuth('login')}
-                className="px-4 py-2 text-wine hover:text-wine-dark font-medium transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => openAuth('register')}
-                className="px-4 py-2 bg-wine hover:bg-wine-dark text-white font-medium rounded-lg transition-colors"
-              >
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight text-balance">
-              Your Personal{' '}
-              <span className="text-wine">Book Collection</span>
-              {' '}Manager
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed text-pretty">
-              Organize, track, and discover your books with ease. A modern library system 
-              designed for book lovers who want to keep their collection organized and accessible.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => openAuth('register')}
-                className="w-full sm:w-auto px-8 py-4 bg-wine hover:bg-wine-dark text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-lg"
-              >
-                Start Your Library
-                <ArrowRight size={20} />
-              </button>
-              <button
-                onClick={() => openAuth('login')}
-                className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-paper-dark text-foreground font-semibold rounded-lg transition-colors border border-border text-lg"
-              >
-                Sign In
-              </button>
-            </div>
-          </div>
-
-          {/* Feature preview image/illustration */}
-          <div className="mt-16 relative">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-border max-w-4xl mx-auto">
-              <div className="bg-wine px-6 py-4 flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                <span className="ml-4 text-white/80 text-sm">My Book Collection</span>
-              </div>
-              <div className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {['The Great Gatsby', 'To Kill a Mockingbird', '1984', 'Pride and Prejudice'].map((title, i) => (
-                  <div key={i} className="bg-paper rounded-lg p-4 text-center">
-                    <div className="w-full aspect-[2/3] bg-gradient-to-br from-wine/20 to-gold/20 rounded-md mb-3 flex items-center justify-center">
-                      <BookOpen className="w-8 h-8 text-wine/50" />
-                    </div>
-                    <p className="text-sm font-medium text-foreground truncate">{title}</p>
-                    <p className="text-xs text-muted-foreground">Classic</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Everything You Need to Manage Your Books
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Simple yet powerful features to help you organize and enjoy your book collection.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Library className="w-8 h-8" />}
-              title="Organize Your Collection"
-              description="Add books with details like title, author, genre, and description. Keep everything in one place."
-            />
-            <FeatureCard
-              icon={<Search className="w-8 h-8" />}
-              title="Quick Search"
-              description="Find any book instantly with our powerful search. Filter by title, author, or genre."
-            />
-            <FeatureCard
-              icon={<Star className="w-8 h-8" />}
-              title="Track Your Favorites"
-              description="Mark your favorite books and keep track of what you love most in your collection."
-            />
-            <FeatureCard
-              icon={<Users className="w-8 h-8" />}
-              title="Personal Library"
-              description="Your books are private and secure. Only you can see and manage your collection."
-            />
-            <FeatureCard
-              icon={<Shield className="w-8 h-8" />}
-              title="Secure & Private"
-              description="Your data is encrypted and protected. We take your privacy seriously."
-            />
-            <FeatureCard
-              icon={<BookOpen className="w-8 h-8" />}
-              title="Easy to Use"
-              description="A clean, intuitive interface that makes managing your books a pleasure."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-wine">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to Organize Your Books?
-          </h2>
-          <p className="text-lg text-white/80 mb-8">
-            Join today and start building your personal digital library.
-          </p>
+      <header className="header-container">
+        <a href="#" className="mr-auto">
+          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[100px] w-auto" />
+        </a>
+        <nav className="flex gap-3">
+          <a href="#members" className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] font-bold no-underline hover:bg-[#340a10] transition-colors" style={{ fontFamily: 'Anton, sans-serif' }}>
+            About
+          </a>
+          <button
+            onClick={() => openAuth('login')}
+            className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
+            style={{ fontFamily: 'Anton, sans-serif' }}
+          >
+            Login
+          </button>
           <button
             onClick={() => openAuth('register')}
-            className="px-8 py-4 bg-white hover:bg-paper text-wine font-semibold rounded-lg transition-colors inline-flex items-center gap-2 text-lg"
+            className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
+            style={{ fontFamily: 'Anton, sans-serif' }}
           >
-            Create Free Account
-            <ArrowRight size={20} />
+            Sign Up
           </button>
+        </nav>
+      </header>
+
+      {/* Main Content */}
+      <main className="pt-[120px] flex-1">
+        <section className="px-[clamp(16px,3vw,34px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr] gap-[clamp(16px,3vw,34px)]">
+            {/* Feature Card */}
+            <article className="feature mt-0 lg:mt-[90px] lg:ml-[50px]">
+              <div className="covers">
+                <Image
+                  src="/img/image-1.png"
+                  alt="To Kill a Mockingbird"
+                  width={250}
+                  height={200}
+                  className="cover cover-1"
+                />
+              </div>
+              <div className="details flex flex-col justify-center">
+                <h1 className="author">Harper Lee</h1>
+                <p className="blurb">
+                  From innocence under reckoning in <em>Mockingbird</em> to the uneasy return of Maycomb in{' '}
+                  <em>Watchman</em>—Lee wrote not just of justice, but of the journey to see it clearly.
+                </p>
+                <a
+                  className="cta"
+                  href="https://www.goodreads.com/author/show/1825.Harper_Lee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read Now
+                </a>
+              </div>
+            </article>
+
+            {/* Aside */}
+            <aside className="aside">
+              <h2>Turn Pages, Turn Minds.</h2>
+              <Image
+                src="/img/image-2.png"
+                alt="Readers in a library"
+                width={360}
+                height={240}
+                className="photo"
+              />
+              <p>
+                Reading isn&apos;t just turning pages—it&apos;s slipping between worlds. A book can take you farther than any
+                plane ticket, into lives you&apos;ve never lived and places you&apos;ve never seen. It&apos;s the cheapest form of
+                travel and the richest form of escape. All you need is a quiet corner and an open mind.
+              </p>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      {/* Members Section */}
+      <section id="members" className="member-frames">
+        <h1>Meet the Group 4</h1>
+        <div className="member-grid">
+          <div className="member">
+            <Image src="/img/member1.jpg" alt="Member 1" width={160} height={160} className="photo" />
+            <h2>Aldrin Clark Adino</h2>
+            <p>Project Manager – Oversees team operations and ensures smooth delivery.</p>
+          </div>
+          <div className="member">
+            <Image src="/img/member2.jpg" alt="Member 2" width={160} height={160} className="photo" />
+            <h2>Antonette Formento</h2>
+            <p>Lead Developer – Builds and maintains the core platform features.</p>
+          </div>
+          <div className="member">
+            <Image src="/img/member3.jpg" alt="Member 3" width={160} height={160} className="photo" />
+            <h2>Mikaella Licup</h2>
+            <p>Lead Developer – Builds and maintains the core platform features.</p>
+          </div>
+          <div className="member">
+            <Image src="/img/member4.jpg" alt="Member 4" width={160} height={160} className="photo" />
+            <h2>Savina Lilagan</h2>
+            <p>Lead Developer – Builds and maintains the core platform features.</p>
+          </div>
+          <div className="member">
+            <Image src="/img/member5.jpg" alt="Member 5" width={160} height={160} className="photo" />
+            <h2>Wency Geraldo</h2>
+            <p>Lead Developer – Builds and maintains the core platform features.</p>
+          </div>
+          <div className="member">
+            <Image src="/img/member6.jpg" alt="Member 6" width={160} height={160} className="photo" />
+            <h2>Gabriel Palattao</h2>
+            <p>Lead Developer – Builds and maintains the core platform features.</p>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 bg-foreground">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-white" />
-            <span className="text-white font-medium">Library System</span>
-          </div>
-          <p className="text-white/60 text-sm">
-            A personal book collection manager
-          </p>
+      <footer className="footer-sec">
+        <div className="footer-text">
+          <p>&copy; 2025 ArkLib. All rights reserved. Group 4</p>
+          <p className="tagline">Turn Pages, Turn Minds.</p>
         </div>
       </footer>
 
@@ -212,18 +174,6 @@ export default function HomePage() {
         onClose={() => setAuthModalOpen(false)}
         initialMode={authMode}
       />
-    </div>
-  )
-}
-
-function FeatureCard({ icon, title, description }) {
-  return (
-    <div className="p-6 bg-paper rounded-xl border border-border hover:shadow-lg transition-shadow">
-      <div className="w-14 h-14 bg-wine/10 rounded-xl flex items-center justify-center text-wine mb-4">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
     </div>
   )
 }

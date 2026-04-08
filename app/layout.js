@@ -13,17 +13,23 @@ const anton = Anton({
 })
 
 export const metadata = {
-  title: 'Library System - Your Personal Book Collection',
-  description: 'A modern library management system to organize and track your personal book collection.',
+  title: 'ArkLib - Turn Pages, Turn Minds',
+  description: 'ArkLib is your personal digital library. Organize, discover, and share books with the ArkLib community.',
+  icons: {
+    icon: '/img/arklib.png',
+  },
 }
 
 export const viewport = {
-  themeColor: '#722f37',
+  themeColor: '#251818',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${anton.variable}`}>
+      <head>
+        <link rel="icon" href="/img/arklib.png" />
+      </head>
       <body className="min-h-screen antialiased">
         {children}
       </body>

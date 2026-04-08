@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import useSWR from 'swr'
-import { BookOpen, Plus, Search, LogOut, Loader2, Library } from 'lucide-react'
-import BookCard from '@/components/book-card'
 import BookModal from '@/components/book-modal'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
@@ -13,18 +12,9 @@ export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [bookModalOpen, setBookModalOpen] = useState(false)
   const [editingBook, setEditingBook] = useState(null)
-  const [deleteLoading, setDeleteLoading] = useState(null)
-
-  // Debounce search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchQuery)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [searchQuery])
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false)
 
   // Fetch user session
   useEffect(() => {
@@ -41,12 +31,23 @@ export default function DashboardPage() {
   }, [router])
 
   // Fetch books
-  const { data, error, isLoading, mutate } = useSWR(
-    user ? `/api/books${debouncedSearch ? `?search=${encodeURIComponent(debouncedSearch)}` : ''}` : null,
+  const { data, isLoading, mutate } = useSWR(
+    user ? `/api/books` : null,
     fetcher
   )
 
   const books = data?.books || []
+  const myBooks = books.filter(b => b.submitted_by === user?.id)
+
+  // Filter books by search
+  const filteredBooks = books.filter(book => {
+    if (!searchQuery) return true
+    const q = searchQuery.toLowerCase()
+    return (
+      book.title.toLowerCase().includes(q) ||
+      book.author.toLowerCase().includes(q)
+    )
+  })
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -64,140 +65,244 @@ export default function DashboardPage() {
     setBookModalOpen(true)
   }
 
-  const handleDeleteBook = async (bookId) => {
-    if (!confirm('Are you sure you want to delete this book?')) return
-
-    setDeleteLoading(bookId)
-    try {
-      const res = await fetch(`/api/books/${bookId}`, { method: 'DELETE' })
-      if (res.ok) {
-        mutate()
-      }
-    } catch (error) {
-      console.error('Delete failed:', error)
-    } finally {
-      setDeleteLoading(null)
-    }
-  }
-
   const handleBookSuccess = useCallback(() => {
     mutate()
   }, [mutate])
 
+  const userInitial = user?.username ? user.username.charAt(0).toUpperCase() : 'U'
+
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-paper">
-        <Loader2 className="w-8 h-8 text-wine animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#efe8e0]">
+        <div className="animate-pulse">
+          <Image src="/img/arklib.png" alt="ArkLib" width={100} height={100} />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen flex flex-col bg-[#efe8e0]">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-wine shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-8 h-8 text-white" />
-              <span className="text-xl font-bold text-white">Library System</span>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <span className="text-white/80 hidden sm:block">
-                Welcome, <span className="font-semibold text-white">{user.username}</span>
-              </span>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-              >
-                <LogOut size={18} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Title & Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">My Book Collection</h1>
-            <p className="text-muted-foreground mt-1">
-              {books.length} {books.length === 1 ? 'book' : 'books'} in your library
-            </p>
-          </div>
+      <header className="header-container">
+        <a href="#" className="mr-auto">
+          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[100px] w-auto" />
+        </a>
+        <nav className="flex gap-3">
           <button
             onClick={handleAddBook}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-wine hover:bg-wine-dark text-white font-semibold rounded-lg transition-colors shadow-md"
+            className="ms-btn"
           >
-            <Plus size={20} />
-            Add Book
+            Submit a Book
           </button>
+          <button
+            onClick={() => setLogoutModalOpen(true)}
+            className="ms-btn ms-btn--ghost"
+          >
+            Logout
+          </button>
+        </nav>
+      </header>
+
+      {/* Overlay */}
+      {(logoutModalOpen || bookModalOpen) && (
+        <div
+          className="ms-overlay"
+          style={{ display: 'block' }}
+          onClick={() => {
+            setLogoutModalOpen(false)
+            setBookModalOpen(false)
+            setEditingBook(null)
+          }}
+        ></div>
+      )}
+
+      {/* Logout Modal */}
+      {logoutModalOpen && (
+        <div className="ms-modal" style={{ display: 'block' }}>
+          <h2 className="ms-modal__title">Leaving so soon?</h2>
+          <p className="ms-modal__body">Are you sure you want to log out, {user.username}?</p>
+          <div className="ms-modal__row">
+            <button className="ms-modal__stay" onClick={() => setLogoutModalOpen(false)}>
+              Stay
+            </button>
+            <button className="ms-modal__go" onClick={handleLogout}>
+              Yes, Logout
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main */}
+      <main className="ms-main">
+        {/* Welcome Banner */}
+        <div className="ms-welcome">
+          <div className="ms-welcome__inner">
+            <div className="ms-welcome__left">
+              <div className="ms-avatar">{userInitial}</div>
+              <div className="ms-welcome__text">
+                <p className="ms-welcome__sup">Welcome back</p>
+                <h1 className="ms-welcome__name">{user.username}</h1>
+                <p className="ms-welcome__sub">Your reading journey continues. What will you discover today?</p>
+              </div>
+            </div>
+            <div className="ms-welcome__stats">
+              <div className="ms-wstat">
+                <span className="ms-wstat__num">{books.length}</span>
+                <span className="ms-wstat__lbl">Books<br />in Library</span>
+              </div>
+              <div className="ms-wstat__sep"></div>
+              <div className="ms-wstat">
+                <span className="ms-wstat__num">{myBooks.length}</span>
+                <span className="ms-wstat__lbl">Your<br />Submissions</span>
+              </div>
+              <div className="ms-wstat__sep"></div>
+              <div className="ms-wstat">
+                <span className="ms-wstat__num">∞</span>
+                <span className="ms-wstat__lbl">Adventures<br />Awaiting</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative mb-8">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by title, author, or genre..."
-            className="w-full pl-12 pr-4 py-3 border border-border rounded-xl bg-white text-foreground focus:ring-2 focus:ring-wine focus:border-transparent shadow-sm"
-          />
-        </div>
-
-        {/* Books Grid */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-10 h-10 text-wine animate-spin" />
-          </div>
-        ) : error ? (
-          <div className="text-center py-20">
-            <p className="text-red-600">Failed to load books. Please try again.</p>
-          </div>
-        ) : books.length === 0 ? (
-          <div className="text-center py-20">
-            <Library className="w-20 h-20 text-muted-foreground/30 mx-auto mb-4" />
-            {debouncedSearch ? (
-              <>
-                <h3 className="text-xl font-semibold text-foreground mb-2">No books found</h3>
-                <p className="text-muted-foreground">
-                  {"No books match your search \"" + debouncedSearch + "\". Try a different search term."}
+        {/* Featured Section */}
+        <section className="ms-featured-frame">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr] gap-[clamp(16px,3vw,34px)]">
+            <article className="feature !m-0">
+              <div className="covers">
+                <Image
+                  src="/img/image-1.png"
+                  alt="To Kill a Mockingbird"
+                  width={250}
+                  height={200}
+                  className="cover cover-1"
+                />
+              </div>
+              <div className="details flex flex-col justify-center">
+                <span className="ms-badge">Editor&apos;s Pick</span>
+                <h2 className="author">Harper Lee</h2>
+                <p className="blurb">
+                  From innocence under reckoning in <em>Mockingbird</em> to the uneasy return of Maycomb in{' '}
+                  <em>Watchman</em>—Lee wrote not just of justice, but of the journey to see it clearly.
                 </p>
-              </>
-            ) : (
-              <>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Your library is empty</h3>
-                <p className="text-muted-foreground mb-6">
-                  Start building your collection by adding your first book.
-                </p>
-                <button
-                  onClick={handleAddBook}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-wine hover:bg-wine-dark text-white font-semibold rounded-lg transition-colors"
+                <a
+                  className="cta"
+                  href="https://www.goodreads.com/author/show/1825.Harper_Lee"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <Plus size={20} />
-                  Add Your First Book
-                </button>
-              </>
+                  Read Now
+                </a>
+              </div>
+            </article>
+
+            <aside className="aside">
+              <h2>Turn Pages, Turn Minds.</h2>
+              <Image
+                src="/img/image-2.png"
+                alt="Readers in a library"
+                width={360}
+                height={240}
+                className="photo"
+              />
+              <p>
+                Reading isn&apos;t just turning pages—it&apos;s slipping between worlds. A book can take you
+                farther than any plane ticket, into lives you&apos;ve never lived. All you need is a quiet
+                corner and an open mind.
+              </p>
+            </aside>
+          </div>
+        </section>
+
+        {/* Book Collection */}
+        <section className="ms-collection" id="books">
+          <div className="ms-collection__hdr">
+            <h2 className="ms-collection__title">Browse Collection</h2>
+            <input
+              type="search"
+              id="bookSearch"
+              placeholder="Search title or author..."
+              className="ms-search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="ms-grid" id="bookGrid">
+            {isLoading ? (
+              <p className="ms-empty">Loading books...</p>
+            ) : filteredBooks.length === 0 ? (
+              <p className="ms-empty">No books yet — be the first to submit one!</p>
+            ) : (
+              filteredBooks.map((book) => (
+                <article key={book.id} className="ms-card">
+                  <div
+                    className="ms-card__spine"
+                    style={{ background: book.cover_color || '#7f9aa2' }}
+                  >
+                    {book.cover_image ? (
+                      <Image
+                        src={book.cover_image}
+                        alt="Cover"
+                        width={230}
+                        height={126}
+                        className="w-full h-full object-cover"
+                        style={{ borderRadius: 'inherit' }}
+                      />
+                    ) : (
+                      <span className="ms-card__initials">
+                        {book.title.substring(0, 2).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="ms-card__body">
+                    <span className="ms-card__genre">{book.genre || 'General'}</span>
+                    <h3 className="ms-card__title">{book.title}</h3>
+                    <p className="ms-card__author">{book.author}</p>
+                    {book.description && (
+                      <p className="ms-card__desc">
+                        {book.description.length > 90
+                          ? book.description.substring(0, 90) + '...'
+                          : book.description}
+                      </p>
+                    )}
+                  </div>
+                  <div className="ms-card__foot">
+                    {book.pdf_url ? (
+                      <a
+                        href={book.pdf_url.startsWith('urn:lcp:')
+                          ? `https://archive.org/details/${book.pdf_url.split(':')[2]}/mode/2up`
+                          : book.pdf_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ms-card__read"
+                      >
+                        Read →
+                      </a>
+                    ) : (
+                      <span className="ms-card__nopdf">No link yet</span>
+                    )}
+                    <button
+                      className="ms-card__edit-btn"
+                      onClick={() => handleEditBook(book)}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </article>
+              ))
             )}
           </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-            {books.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onEdit={handleEditBook}
-                onDelete={handleDeleteBook}
-              />
-            ))}
-          </div>
-        )}
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer className="footer-sec">
+        <div className="footer-text">
+          <p>&copy; 2025 ArkLib. All rights reserved. Group 4</p>
+          <p className="tagline">Turn Pages, Turn Minds.</p>
+        </div>
+      </footer>
 
       {/* Book Modal */}
       <BookModal
