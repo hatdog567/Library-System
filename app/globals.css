@@ -1038,6 +1038,8 @@ main {
 }
 
 /* ========== RESPONSIVE ========== */
+
+/* Tablet */
 @media (max-width: 860px) {
   .ms-welcome__stats {
     width: 100%;
@@ -1046,29 +1048,390 @@ main {
   .ms-wstat {
     padding: 0 18px;
   }
+  
+  .header-container {
+    height: 80px;
+    padding: 0 4%;
+  }
+  
+  main {
+    padding-top: 100px;
+  }
+  
+  .ms-main {
+    padding-top: 90px;
+  }
+  
+  .feature {
+    margin: 30px 20px;
+  }
+  
+  .author {
+    font-size: clamp(24px, 5vw, 36px);
+  }
+  
+  .blurb {
+    font-size: clamp(13px, 2vw, 16px);
+  }
+  
+  .member-frames h1 {
+    font-size: clamp(24px, 5vw, 36px);
+  }
+  
+  .member h2 {
+    font-size: clamp(18px, 3vw, 24px);
+  }
+  
+  .aside h2 {
+    font-size: clamp(20px, 3.5vw, 28px);
+  }
 }
 
+/* Mobile */
 @media (max-width: 640px) {
-  .ms-welcome {
-    padding: 36px 20px;
+  .header-container {
+    height: 70px;
+    padding: 0 3%;
   }
+  
+  main {
+    padding-top: 85px;
+  }
+  
+  .ms-main {
+    padding-top: 80px;
+  }
+  
+  .ms-welcome {
+    padding: 28px 16px;
+  }
+  
   .ms-welcome__left {
     flex-direction: column;
     align-items: flex-start;
   }
+  
+  .ms-welcome__name {
+    font-size: clamp(26px, 7vw, 40px);
+  }
+  
+  .ms-welcome__sub {
+    font-size: clamp(12px, 3vw, 15px);
+  }
+  
   .ms-welcome__stats {
     flex-wrap: wrap;
     gap: 16px;
+    padding: 16px 20px;
   }
+  
+  .ms-wstat {
+    padding: 0 14px;
+  }
+  
+  .ms-wstat__num {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+  
+  .ms-wstat__lbl {
+    font-size: 0.62rem;
+  }
+  
   .ms-wstat__sep {
     display: none;
   }
+  
   .ms-collection__hdr {
     flex-direction: column;
     align-items: flex-start;
   }
+  
+  .ms-collection__title {
+    font-size: clamp(20px, 5vw, 28px);
+  }
+  
   .ms-search {
     width: 100%;
+  }
+  
+  .ms-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+  }
+  
+  /* Landing page mobile fixes */
+  .feature {
+    margin: 20px 12px;
+    padding: clamp(14px, 3vw, 22px);
+    gap: clamp(12px, 3vw, 18px);
+  }
+  
+  .covers {
+    width: clamp(140px, 40vw, 200px);
+    min-height: 140px;
+  }
+  
+  .cover {
+    width: 180px;
+    height: 150px;
+  }
+  
+  .author {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+  
+  .blurb {
+    font-size: clamp(12px, 3vw, 15px);
+  }
+  
+  .cta {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .aside h2 {
+    font-size: clamp(18px, 5vw, 26px);
+  }
+  
+  .aside p {
+    font-size: clamp(12px, 3vw, 15px);
+    padding: 0 12px;
+  }
+  
+  .member-frames {
+    margin: 40px auto;
+    padding: 0 12px;
+  }
+  
+  .member-frames h1 {
+    font-size: clamp(22px, 6vw, 32px);
+    margin-bottom: 20px;
+  }
+  
+  .member-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .member {
+    padding: clamp(16px, 4vw, 24px);
+    min-height: auto;
+  }
+  
+  .member .photo {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .member h2 {
+    font-size: clamp(16px, 4vw, 22px);
+  }
+  
+  .member p {
+    font-size: 13px;
+  }
+  
+  /* Auth modal mobile */
+  .auth-modal {
+    width: min(420px, 94vw);
+    padding: 22px 18px 20px;
+    border-radius: 16px;
+  }
+  
+  .auth-tabs {
+    margin: 4px 20px 12px 4px;
+    gap: 8px;
+  }
+  
+  .auth-tab {
+    height: 36px;
+    font-size: 0.85rem;
+  }
+  
+  .form-box h2 {
+    font-size: 28px;
+  }
+  
+  .input-box input {
+    height: 45px;
+    font-size: 15px;
+    padding: 0 16px;
+  }
+  
+  .auth-btn {
+    height: 42px;
+    font-size: 16px;
+  }
+  
+  .forgot-panel h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* Book modal mobile */
+  .ms-modal {
+    width: min(420px, 94vw);
+    padding: 26px 20px 22px;
+    border-radius: 16px;
+  }
+  
+  .ms-modal__title {
+    font-size: 1.4rem;
+  }
+  
+  .ms-field label {
+    font-size: 0.68rem;
+  }
+  
+  .ms-field input,
+  .ms-field select,
+  .ms-field textarea {
+    font-size: 0.85rem;
+    padding: 9px 12px;
+  }
+  
+  .ms-submit-btn {
+    font-size: 0.9rem;
+    padding: 11px;
+  }
+  
+  /* Book cards mobile */
+  .ms-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  
+  .ms-card__spine {
+    height: 100px;
+  }
+  
+  .ms-card__initials {
+    font-size: 2.2rem;
+  }
+  
+  .ms-card__body {
+    padding: 12px 12px 8px;
+  }
+  
+  .ms-card__genre {
+    font-size: 0.58rem;
+  }
+  
+  .ms-card__title {
+    font-size: 0.9rem;
+  }
+  
+  .ms-card__author {
+    font-size: 0.72rem;
+  }
+  
+  .ms-card__desc {
+    font-size: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .ms-card__foot {
+    padding: 0 12px 12px;
+  }
+  
+  .ms-card__read {
+    font-size: 0.72rem;
+    padding: 6px 12px;
+  }
+  
+  .ms-card__edit-btn {
+    font-size: 12px;
+  }
+  
+  /* Footer mobile */
+  .footer-sec {
+    padding: 8px 10px;
+  }
+  
+  .footer-sec p,
+  .footer-text .tagline {
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 400px) {
+  .header-container {
+    height: 60px;
+  }
+  
+  main {
+    padding-top: 75px;
+  }
+  
+  .ms-main {
+    padding-top: 70px;
+  }
+  
+  .ms-welcome__name {
+    font-size: clamp(22px, 8vw, 32px);
+  }
+  
+  .ms-wstat__num {
+    font-size: clamp(20px, 7vw, 30px);
+  }
+  
+  .feature {
+    padding: 12px;
+    margin: 16px 8px;
+  }
+  
+  .covers {
+    width: 120px;
+    min-height: 120px;
+  }
+  
+  .cover {
+    width: 140px;
+    height: 120px;
+  }
+  
+  .author {
+    font-size: 20px;
+  }
+  
+  .blurb {
+    font-size: 12px;
+  }
+  
+  .member-frames h1 {
+    font-size: 20px;
+  }
+  
+  .member .photo {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .auth-modal,
+  .ms-modal {
+    width: 96vw;
+    padding: 18px 14px 16px;
+  }
+  
+  .form-box h2 {
+    font-size: 24px;
+  }
+  
+  .ms-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .ms-card__spine {
+    height: 80px;
+  }
+  
+  .ms-card__initials {
+    font-size: 1.8rem;
   }
 }
 

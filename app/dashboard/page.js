@@ -86,18 +86,18 @@ export default function DashboardPage() {
       {/* Header */}
       <header className="header-container">
         <a href="#" className="mr-auto">
-          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[100px] w-auto" />
+          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[50px] sm:h-[70px] md:h-[100px] w-auto" />
         </a>
-        <nav className="flex gap-3">
+        <nav className="flex gap-2 sm:gap-3">
           <button
             onClick={handleAddBook}
-            className="ms-btn"
+            className="ms-btn text-[0.7rem] sm:text-[0.88rem] px-3 sm:px-[22px] py-2 sm:py-[10px]"
           >
-            Submit a Book
+            Submit
           </button>
           <button
             onClick={() => setLogoutModalOpen(true)}
-            className="ms-btn ms-btn--ghost"
+            className="ms-btn ms-btn--ghost text-[0.7rem] sm:text-[0.88rem] px-3 sm:px-[22px] py-2 sm:py-[10px]"
           >
             Logout
           </button>

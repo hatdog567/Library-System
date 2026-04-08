@@ -48,22 +48,22 @@ export default function HomePage() {
       {/* Header */}
       <header className="header-container">
         <a href="#" className="mr-auto">
-          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[100px] w-auto" />
+          <Image src="/img/arklib.png" alt="ArkLib Logo" width={100} height={100} className="h-[50px] sm:h-[70px] md:h-[100px] w-auto" />
         </a>
-        <nav className="flex gap-3">
-          <a href="#members" className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] font-bold no-underline hover:bg-[#340a10] transition-colors" style={{ fontFamily: 'Anton, sans-serif' }}>
+        <nav className="flex gap-2 sm:gap-3">
+          <a href="#members" className="px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#1f1f1f] text-white rounded-[20px] font-bold no-underline hover:bg-[#340a10] transition-colors" style={{ fontFamily: 'Anton, sans-serif' }}>
             About
           </a>
           <button
             onClick={() => openAuth('login')}
-            className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
+            className="px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
             style={{ fontFamily: 'Anton, sans-serif' }}
           >
             Login
           </button>
           <button
             onClick={() => openAuth('register')}
-            className="px-5 py-2.5 bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
+            className="px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm bg-[#1f1f1f] text-white rounded-[20px] border-none cursor-pointer hover:bg-[#340a10] transition-colors"
             style={{ fontFamily: 'Anton, sans-serif' }}
           >
             Sign Up
