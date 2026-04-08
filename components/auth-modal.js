@@ -10,6 +10,12 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showForgot, setShowForgot] = useState(false)
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
+
+  // Password visibility states
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
 
   const [formData, setFormData] = useState({
     username: '',
@@ -36,6 +42,19 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     setError('')
     setSuccess('')
+  }
+
+  const clearForm = () => {
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      newPassword: '',
+    })
+    setShowPassword(false)
+    setShowConfirmPassword(false)
+    setShowNewPassword(false)
   }
 
   const handleSubmit = async (e) => {
@@ -73,8 +92,22 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
         throw new Error(data.error || 'Something went wrong')
       }
 
-      router.push('/dashboard')
-      router.refresh()
+      if (mode === 'register') {
+        // Clear form and show success popup for signup
+        clearForm()
+        setShowSuccessPopup(true)
+        // Auto-hide popup after 3 seconds and switch to login
+        setTimeout(() => {
+          setShowSuccessPopup(false)
+          setMode('login')
+        }, 3000)
+      } else {
+        // Login successful - close modal and redirect
+        onClose()
+        router.push('/dashboard')
+        router.refresh()
+      }
+
     } catch (err) {
       setError(err.message)
     } finally {
@@ -134,7 +167,30 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
     setError('')
     setSuccess('')
     setShowForgot(false)
+    clearForm()
   }
+
+  // Eye icon component for password visibility toggle
+  const EyeIcon = ({ show, onClick }) => (
+    <button
+      type="button"
+      className="password-toggle"
+      onClick={onClick}
+      aria-label={show ? 'Hide password' : 'Show password'}
+    >
+      {show ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      )}
+    </button>
+  )
 
   if (!isOpen) return null
 
@@ -142,6 +198,22 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
     <>
       {/* Overlay */}
       <div className="auth-overlay" onClick={onClose}></div>
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="success-popup-overlay">
+          <div className="success-popup">
+            <div className="success-popup-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h3>Account Created Successfully!</h3>
+            <p>You can now login with your credentials.</p>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       <div className="auth-modal">
@@ -184,15 +256,16 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                       required
                     />
                   </div>
-                  <div className="input-box">
+                  <div className="input-box password-input-box">
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       placeholder="Password"
                       value={formData.password}
                       onChange={handleChange}
                       required
                     />
+                    <EyeIcon show={showPassword} onClick={() => setShowPassword(!showPassword)} />
                   </div>
                   <button className="auth-btn" type="submit" disabled={loading}>
                     {loading ? 'Logging in...' : 'Login'}
@@ -235,9 +308,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                       required
                     />
                   </div>
-                  <div className="input-box">
+                  <div className="input-box password-input-box">
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       placeholder="Password"
                       value={formData.password}
@@ -245,10 +318,11 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                       required
                       minLength={6}
                     />
+                    <EyeIcon show={showPassword} onClick={() => setShowPassword(!showPassword)} />
                   </div>
-                  <div className="input-box">
+                  <div className="input-box password-input-box">
                     <input
-                      type="password"
+                      type={showConfirmPassword ? 'text' : 'password'}
                       name="confirmPassword"
                       placeholder="Confirm Password"
                       value={formData.confirmPassword}
@@ -256,6 +330,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                       required
                       minLength={6}
                     />
+                    <EyeIcon show={showConfirmPassword} onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
                   </div>
                   <button className="auth-btn" type="submit" disabled={loading}>
                     {loading ? 'Signing up...' : 'Sign Up'}
@@ -291,9 +366,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                   required
                 />
               </div>
-              <div className="input-box">
+              <div className="input-box password-input-box">
                 <input
-                  type="password"
+                  type={showNewPassword ? 'text' : 'password'}
                   name="newPassword"
                   placeholder="New password"
                   value={formData.newPassword}
@@ -301,16 +376,18 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }) {
                   required
                   minLength={6}
                 />
+                <EyeIcon show={showNewPassword} onClick={() => setShowNewPassword(!showNewPassword)} />
               </div>
-              <div className="input-box">
+              <div className="input-box password-input-box">
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   name="confirmPassword"
                   placeholder="Confirm new password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
                 />
+                <EyeIcon show={showConfirmPassword} onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
               </div>
               <button className="auth-btn" type="submit" disabled={loading}>
                 {loading ? 'Resetting...' : 'Reset Password'}
