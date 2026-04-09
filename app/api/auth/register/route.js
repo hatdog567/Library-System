@@ -5,19 +5,12 @@ import { createSession } from '@/lib/auth'
 
 export async function POST(request) {
   try {
-    const { username, email, password, confirmPassword } = await request.json()
+    const { username, email, password } = await request.json()
 
     // Validation
-    if (!username || !email || !password || !confirmPassword) {
+    if (!username || !email || !password) {
       return NextResponse.json(
         { error: 'All fields are required' },
-        { status: 400 }
-      )
-    }
-
-    if (password !== confirmPassword) {
-      return NextResponse.json(
-        { error: 'Passwords do not match' },
         { status: 400 }
       )
     }
